@@ -20,17 +20,22 @@ namespace WindowsPhoneWeatherApp
 
         private void CheckWeather_Click(object sender, RoutedEventArgs e)
         {
-            _weatherService.GetWeather(ZipCode.Text,
-                                       weather =>
-                                           {
-                                               Dispatcher.BeginInvoke(() =>
-                                                                          {
-                                                                              Temperature.Text =
-                                                                                  weather.Temperature.ToString();
-                                                                              Conditions.Text = weather.Description;
-                                                                          });
+            if (string.IsNullOrEmpty(ZipCode.Text))
+            {
+                MessageBox.Show("Please enter a zip code");
 
-                                           });
+                return;
+            }
+
+            _weatherService.GetWeather(ZipCode.Text, weather =>
+            {
+                Dispatcher.BeginInvoke(() => 
+                {
+                    Temperature.Text =
+                        weather.Temperature.ToString();
+                    Conditions.Text = weather.Description;
+                });
+            });
         }
     }
 }
