@@ -30,16 +30,26 @@ namespace AndroidWeatherApp
         }
 
         private void checkWeather(object sender, EventArgs e)
-        {
-            _weatherService.GetWeather(_zipCode.Text,
-                                       weather =>
-                                           {
-                                               RunOnUiThread(() =>
-                                                                 {
-                                                                     _temperature.Text = weather.Temperature.ToString();
-                                                                     _conditions.Text = weather.Description;
-                                                                 });
-                                           });
+		{
+			if (string.IsNullOrEmpty (_zipCode.Text))
+			{
+				var builder = new AlertDialog.Builder (this);
+				
+				builder.SetTitle ("Error");
+				builder.SetMessage ("Please enter a zip code");
+				
+				builder.Show ();
+				
+				return;
+			}
+			
+            _weatherService.GetWeather(_zipCode.Text, weather => {
+           		RunOnUiThread(() =>
+				{
+					_temperature.Text = weather.Temperature.ToString();
+					_conditions.Text = weather.Description;
+				});
+           });
         }
     }
 }
